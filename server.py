@@ -55,18 +55,16 @@ __DYNAMIC_ROOT = "/dynamic/menvswomen/srvsexwars"
 
 @app.route("/", methods=['GET', 'POST'])
 def login():
-    # Log out previous session
     session.pop('USERID', default=None)
     session.pop('GAMEVERSION', default=None)
-    # Reload saves (not static villages nor quests). Allows saves modification without server reset
     load_saves()
-    # If logging in, set session USERID, and go to play
     if request.method == 'POST':
         session['USERID'] = request.form['USERID']
         session['GAMEVERSION'] = request.form['GAMEVERSION']
         print("[LOGIN] USERID:", request.form['USERID'])
         print("[LOGIN] GAMEVERSION:", request.form['GAMEVERSION'])
         return redirect("/play.html")
+
     # Login page
     if request.method == 'GET':
         saves_info = all_saves_info()
@@ -86,7 +84,14 @@ def play():
     GAMEVERSION = session['GAMEVERSION']
     print("[PLAY] USERID:", USERID)
     print("[PLAY] GAMEVERSION:", GAMEVERSION)
-    return render_template("play.html", save_info=save_info(USERID), serverTime=timestamp_now(), friendsInfo=fb_friends_str(USERID), version=version_name, GAMEVERSION=GAMEVERSION, SERVERIP=host, SERVERPORT=port)
+    return render_template("play.html", 
+                           save_info=save_info(USERID), 
+                           serverTime=timestamp_now(), 
+                           friendsInfo=fb_friends_str(USERID), 
+                           version=version_name, 
+                           GAMEVERSION=GAMEVERSION, 
+                           SERVERIP=host, 
+                           SERVERPORT=port)
 
 @app.route("/new.html")
 def new():
@@ -336,4 +341,4 @@ print (" [+] Running server...")
 
 if __name__ == '__main__':
     app.secret_key = 'SECRET_KEY'
-    app.run(host=host, port=port, debug=False)
+app.run(host=host, port=port, debug=True)
