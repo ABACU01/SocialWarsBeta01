@@ -34,10 +34,10 @@ __initial_village = json.load(open(os.path.join(VILLAGES_DIR, "initial.json")))
 def load_saves():
     global __saves
 
-    # Empty in memory
+    # Vaciar la memoria
     __saves = {}
 
-    # Saves dir check
+    # Comprobación de la existencia del directorio
     if not os.path.exists(SAVES_DIR):
         try:
             print(f"Creating '{SAVES_DIR}' folder...")
@@ -49,11 +49,12 @@ def load_saves():
         print(f"'{SAVES_DIR}' is not a folder... Move the file somewhere else.")
         exit(1)
 
-    # Saves in /saves
+    # Cargar partidas desde el directorio /saves
     for file in os.listdir(SAVES_DIR):
         print(f" * Loading SAVE: village at {file}... ", end='')
         try:
             save = json.load(open(os.path.join(SAVES_DIR, file)))
+            print(f"Loaded save for {file}")
         except json.decoder.JSONDecodeError as e:
             print("Corrupted JSON.")
             continue
@@ -61,11 +62,12 @@ def load_saves():
             print("Invalid Save")
             continue
         USERID = save["playerInfo"]["pid"]
-        print("PLAYER USERID:", USERID)
+        print(f"Loaded PLAYER USERID: {USERID}")
         __saves[str(USERID)] = save
-        modified = migrate_loaded_save(save) # check save version for migration
+        modified = migrate_loaded_save(save)  # check save version for migration
         if modified:
             save_session(USERID)
+
 
 def load_static_villages():
     global __villages
@@ -144,7 +146,13 @@ def save_info(USERID: str) -> dict:
     empire_name = str(save["playerInfo"]["name"])
     xp = save["maps"][default_map]["xp"]
     level = save["maps"][default_map]["level"]
-    return{"userid": USERID, "name": empire_name, "xp": xp, "level": level}
+    
+    # Verifica los valores antes de retornarlos
+    print(f"DEBUG: USERID={USERID}, empire_name={empire_name}, xp={xp}, level={level}")
+    
+    return {"userid": USERID, "name": empire_name, "xp": xp, "level": level}
+
+
 
 def all_saves_info() -> list:
     saves_info = []
