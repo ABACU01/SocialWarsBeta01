@@ -37,8 +37,8 @@ from version import version_name
 from bundle import ASSETS_DIR, STUB_DIR, TEMPLATES_DIR, BASE_DIR
 from constants import Quests
 
-host = '127.0.0.1'
-port = 5055
+host = '0.0.0.0'  # Permite que el servidor sea accesible desde cualquier dirección.
+port = int(os.environ.get("PORT", 5055))  # Usa el puerto asignado por Railway, si no está disponible, usa 8080.
 
 app = Flask(__name__, template_folder=TEMPLATES_DIR)
 
