@@ -121,16 +121,16 @@ def css(path):
 @app.route(__STATIC_ROOT + "/<path:path>")
 def static_assets_loader(path):
     # LITE-WEIGHT BUILD: ASSETS FROM GITHUB
-if False:
-    cdn = "https://raw.githubusercontent.com/ABACU01/SocialWarsBeta01/main/assets/"
-    try:
-        r = requests.get(cdn + path)  # TODO timeout, retry
-    except requests.exceptions:
-        return ""
-    m = io.BytesIO(r.content)
-    m.seek(0)
-    return send_file(m, download_name=path.split("/")[-1:][0])
+    if False:
+        cdn = "https://raw.githubusercontent.com/ABACU01/SocialWarsBeta01/main/assets/"
 
+        try:
+            r = requests.get(cdn + path) # TODO timeout, retry
+        except requests.exceptions:
+            return ""
+        m = io.BytesIO(r.content)
+        m.seek(0)
+        return send_file(m, download_name=path.split("/")[-1:][0])
     # OFFLINE BUILD
     return send_from_directory(ASSETS_DIR, path)
 
@@ -342,4 +342,4 @@ print (" [+] Running server...")
 
 if __name__ == '__main__':
     app.secret_key = 'SECRET_KEY'
-app.run(host=host, port=port, debug=True)
+app.run(host=host, port=port, debug=False)
